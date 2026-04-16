@@ -3,151 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUL AZAD | Digital Vault</title>
+    <title>GUL AZAD | Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap');
-
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
-            background: #000; 
-            color: #D4AF37; 
-            font-family: 'Rajdhani', sans-serif; 
+            background-color: #050505; 
+            color: #ffffff; 
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
         }
 
-        /* Matrix Background Canvas */
-        #canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
-
-        /* HEADER GLITCH EFFECT */
-        .header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%); }
-        
-        .main-title { 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: clamp(3rem, 15vw, 8rem); 
-            font-weight: 900; 
-            letter-spacing: 20px;
-            position: relative;
-            animation: glow 2s ease-in-out infinite alternate;
+        /* ROYAL INTRO ANIMATION */
+        .intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 1000; display: flex;
+            justify-content: center; align-items: center;
+            animation: curtainUp 2.5s cubic-bezier(0.9, 0, 0.1, 1) forwards 3s;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #D4AF37, 0 0 20px #D4AF37; }
-            to { text-shadow: 0 0 30px #D4AF37, 0 0 50px #FAD02C; }
+        .intro-name {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 10vw, 5rem);
+            color: #D4AF37;
+            letter-spacing: 25px;
+            opacity: 0;
+            animation: royalReveal 2.5s ease-out forwards 0.5s;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
         }
 
-        .subtitle { font-size: 1.2rem; letter-spacing: 5px; color: #aaa; margin-top: -10px; text-transform: uppercase; }
+        @keyframes royalReveal {
+            0% { opacity: 0; letter-spacing: 40px; filter: blur(15px); transform: scale(1.1); }
+            100% { opacity: 1; letter-spacing: 15px; filter: blur(0); transform: scale(1); }
+        }
 
-        /* SECTIONS CONTAINER */
-        .section-container { padding: 50px 20px; max-width: 1400px; margin: 0 auto; }
-        .section-name { font-size: 2rem; border-left: 5px solid #D4AF37; padding-left: 15px; margin: 60px 0 30px; text-transform: uppercase; letter-spacing: 3px; }
+        @keyframes curtainUp {
+            to { transform: translateY(-100%); visibility: hidden; }
+        }
 
-        /* IMAGE SLOTS (EMPTY FOR YOU) */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        
-        .image-slot {
-            height: 400px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed rgba(212, 175, 55, 0.3);
-            border-radius: 20px;
+        /* MAIN WEBSITE LOOK */
+        header {
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);
             position: relative;
+        }
+
+        .main-logo {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 12vw, 6rem);
+            color: #D4AF37;
+            margin-bottom: 20px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .gold-line {
+            width: 0; height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            animation: lineExpand 2s forwards 3.5s;
+        }
+
+        @keyframes lineExpand { to { width: 300px; } }
+
+        /* LUXURY PHOTO SECTIONS */
+        .gallery-container { max-width: 1400px; margin: 0 auto; padding: 100px 20px; }
+
+        .section-header {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem; color: #D4AF37;
+            text-align: center; margin-bottom: 60px;
+            letter-spacing: 5px; text-transform: uppercase;
+        }
+
+        .luxury-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 40px; margin-bottom: 120px;
+        }
+
+        .photo-frame {
+            height: 500px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            position: relative;
+            transition: 0.7s cubic-bezier(0.2, 1, 0.3, 1);
             overflow: hidden;
-            transition: 0.5s;
-            backdrop-filter: blur(5px);
         }
 
-        .image-slot::before {
-            content: "ADD IMAGE HERE";
-            font-size: 0.8rem;
-            color: rgba(212, 175, 55, 0.2);
+        .photo-frame:hover {
+            border-color: #D4AF37;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(212, 175, 55, 0.2);
+            transform: translateY(-15px);
         }
 
-        .image-slot:hover {
-            border: 1px solid #D4AF37;
-            transform: translateY(-10px) rotateY(10deg);
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
-            background: rgba(212, 175, 55, 0.05);
+        .photo-frame::before {
+            content: 'PREVIEW';
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem; letter-spacing: 3px; color: rgba(212, 175, 55, 0.2);
         }
 
-        /* LIGHTING EFFECT ON MOUSE */
-        .cursor-light {
-            position: fixed; width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
-            border-radius: 50%; pointer-events: none; z-index: 999;
+        /* SOFT AMBIENT BACKGROUND */
+        .ambient-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background: radial-gradient(circle at 50% 50%, #111, #000);
         }
     </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
-<div class="cursor-light" id="light"></div>
+<div class="intro-overlay">
+    <h1 class="intro-name">GUL AZAD</h1>
+</div>
 
-<header class="header">
-    <h1 class="main-title">GUL AZAD</h1>
-    <p class="subtitle">Personal Memory Archive // Secured</p>
+<div class="ambient-glow"></div>
+
+<header>
+    <h1 class="main-logo">GUL AZAD</h1>
+    <div class="gold-line"></div>
 </header>
 
-<div class="section-container">
+<div class="gallery-container">
     
-    <div class="section-name">01. THE LEGACY</div>
-    <div class="grid">
-        <div class="image-slot"></div>
-        <div class="image-slot"></div>
-        <div class="image-slot"></div>
+    <h2 class="section-header">Exclusive Collection</h2>
+    <div class="luxury-grid">
+        <div class="photo-frame"></div>
+        <div class="photo-frame"></div>
+        <div class="photo-frame"></div>
     </div>
 
-    <div class="section-name">02. UNTOLD MOMENTS</div>
-    <div class="grid">
-        <div class="image-slot"></div>
-        <div class="image-slot"></div>
-        <div class="image-slot"></div>
-    </div>
-
-    <div class="section-name">03. THE JOURNEY</div>
-    <div class="grid">
-        <div class="image-slot"></div>
-        <div class="image-slot"></div>
-        <div class="image-slot"></div>
+    <h2 class="section-header">Golden Memories</h2>
+    <div class="luxury-grid">
+        <div class="photo-frame"></div>
+        <div class="photo-frame"></div>
+        <div class="photo-frame"></div>
     </div>
 
 </div>
-
-<script>
-    // Matrix Background Animation
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%';
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const rainDrops = Array.from({ length: columns }).fill(1);
-
-    function draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#D4AF37';
-        ctx.font = fontSize + 'px monospace';
-        for (let i = 0; i < rainDrops.length; i++) {
-            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-            rainDrops[i]++;
-        }
-    }
-    setInterval(draw, 30);
-
-    // Mouse Light Effect
-    const light = document.getElementById('light');
-    document.addEventListener('mousemove', (e) => {
-        light.style.left = e.clientX - 200 + 'px';
-        light.style.top = e.clientY - 200 + 'px';
-    });
-</script>
 
 </body>
 </html>
