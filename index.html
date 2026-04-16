@@ -3,532 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dad's Memories - Premium Photo Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Dad's Memories | Premium Edition</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-gold: #D4AF37;
-            --dark-bg: #0A0A0F;
-            --card-bg: rgba(20, 20, 30, 0.8);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --text-light: #F0F0F0;
-            --text-muted: #A0A0A0;
-            --shadow-neon: 0 0 30px rgba(212, 175, 55, 0.3);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1A1A2E 50%, #16213E 100%);
-            color: var(--text-light);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #050505; 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
             overflow-x: hidden;
-            line-height: 1.7;
         }
 
-        /* Preloader */
-        .preloader {
+        /* Animated Background Canvas */
+        #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.3;
         }
 
-        .preloader.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
 
-        .loader-ring {
-            width: 80px;
-            height: 80px;
-            border: 4px solid rgba(212, 175, 55, 0.1);
-            border-top: 4px solid var(--primary-gold);
-            border-radius: 50%;
-            animation: spin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        .loader-text {
-            margin-top: 20px;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--primary-gold);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 15px 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-gold), #FAD02C);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-gold);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-gold);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        h1 {
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="1" fill="rgba(212,175,55,0.1)"><animate attributeName="r" values="1;1.5;1" dur="2s" repeatCount="indefinite"/></circle><circle cx="75" cy="75" r="1" fill="rgba(212,175,55,0.1)"><animate attributeName="r" values="1;1.5;1" dur="2s" repeatCount="indefinite" begin="1s"/></circle></svg>') repeat;
-            animation: float-bg 20s infinite linear;
-        }
-
-        @keyframes float-bg {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-20px) rotate(360deg); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 0 20px;
-        }
-
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 8vw, 5rem);
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        /* Gallery Section */
-        .gallery-section {
-            padding: 120px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            text-align: center;
-            margin-bottom: 80px;
-            opacity: 0;
-            transform: translateY(50px);
+            font-size: 3rem;
+            color: #D4AF37;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 50px;
+            animation: fadeInDown 1.5s ease-out;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
         }
 
-        .gallery-item {
-            position: relative;
-            aspect-ratio: 1;
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px;
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            backdrop-filter: blur(10px);
+            transform: translateY(100px);
             opacity: 0;
-            transform: translateY(50px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s forwards;
+            transition: 0.5s;
         }
 
-        .gallery-item:hover {
-            transform: translateY(-15px) scale(1.05);
-            box-shadow: var(--shadow-neon);
+        .card:hover {
+            transform: translateY(-10px) scale(1.03) !important;
+            border-color: #D4AF37;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
         }
 
-        .gallery-item img {
+        .card img {
             width: 100%;
-            height: 100%;
+            height: 350px;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: 0.5s;
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
+        .card:hover img { transform: scale(1.1); }
 
-        .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            padding: 30px 20px 20px;
-            transform: translateY(100%);
-            transition: transform 0.4s ease;
-        }
-
-        .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
-        }
-
-        .gallery-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        /* Lightbox Modal */
-        .lightbox {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            opacity: 0;
-            transform: scale(0.7);
-            transition: all 0.4s ease;
-        }
-
-        .lightbox.active {
-            display: flex;
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-            transform: scale(0.8);
-            transition: transform 0.4s ease;
-        }
-
-        .lightbox.active img {
-            transform: scale(1);
-        }
-
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(212, 175, 55, 0.2);
-            border: none;
-            color: var(--primary-gold);
-            font-size: 2rem;
+        .info {
             padding: 20px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .lightbox-nav:hover {
-            background: rgba(212, 175, 55, 0.4);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .lightbox-prev { left: 20px; }
-        .lightbox-next { right: 20px; }
-
-        .lightbox-close {
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             position: absolute;
-            top: 30px;
-            right: 30px;
-            background: rgba(212, 175, 55, 0.2);
-            border: none;
-            color: var(--primary-gold);
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            bottom: 0; width: 100%;
         }
 
-        .lightbox-close:hover {
-            background: rgba(212, 175, 55, 0.4);
-            transform: scale(1.1);
+        .info h3 { color: #D4AF37; font-size: 1.2rem; }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Back to Top */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, var(--primary-gold), #FAD02C);
-            border: none;
-            border-radius: 50%;
-            color: var(--dark-bg);
-            font-size: 1.5rem;
-            cursor: pointer;
-            opacity: 0;
-            transform: scale(0.7);
-            transition: all 0.3s ease;
-            z-index: 100;
-            box-shadow: var(--shadow-neon);
-        }
-
-        .back-to-top.show {
-            opacity: 1;
-            transform: scale(1);
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 20px;
-            }
-        }
+        @media (max-width: 768px) { h1 { font-size: 1.8rem; } }
     </style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div class="preloader" id="preloader">
-        <div class="loader-ring"></div>
-        <div class="loader-text">Loading Memories...</div>
-    </div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <div class="logo">📸 Dad's Memories</div>
-            <ul class="nav-links">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#gallery" class="nav-link">Gallery</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-            </ul>
+<canvas id="bg-canvas"></canvas>
+
+<div class="container">
+    <h1>Dad's Memories</h1>
+    <div class="gallery-grid" id="gallery">
         </div>
-    </nav>
+</div>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Cherished Moments</h1>
-            <p class="hero-subtitle">A timeless collection of memories captured through the lens of love and life</p>
-        </div>
-    </section>
+<script>
+    // Matrix-like background animation
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    <!-- Gallery Section -->
-    <section id="gallery" class="gallery-section">
-        <h2 class="section-title">Photo Gallery</h2>
-        <div class="gallery-grid" id="galleryGrid">
-            <!-- Images populated by JavaScript -->
-        </div>
-    </section>
-
-    <!-- Lightbox Modal -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" id="closeLightbox"><i class="fas fa-times"></i></button>
-        <button class="lightbox-nav lightbox-prev" id="prevImage"><i class="fas fa-chevron-left"></i></button>
-        <img id="lightboxImg" src="" alt="Full size image">
-        <button class="lightbox-nav lightbox-next" id="nextImage"><i class="fas fa-chevron-right"></i></button>
-    </div>
-
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop">
-        <i class="fas fa-chevron-up"></i>
-    </button>
-
-    <script>
-        // Image gallery data - EASY TO ADD NEW IMAGES HERE
-        const images = [
-            {
-                src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=800&fit=crop",
-                title: "Family Gathering 2023",
-                category: "family"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1517457373958-b7bdd4587206?w=800&h=800&fit=crop",
-                title: "Mountain Adventure",
-                category: "travel"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=800&fit=crop",
-                title: "Golden Hour Portrait",
-                category: "portrait"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=800&fit=crop",
-                title: "City Night Lights",
-                category: "urban"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=800&fit=crop",
-                title: "Beach Memories",
-                category: "vacation"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1517457373958-b7bdd4587206?w=800&h=800&fit=crop",
-                title: "Nature Walk",
-                category: "nature"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=800&fit=crop",
-                title: "Festival Celebration",
-                category: "events"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=800&fit=crop",
-                title: "Winter Wonderland",
-                category: "seasons"
-            },
-            {
-                src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=800&fit=crop",
-                title: "Road Trip Moments",
-                category: "travel"
-            }
-        ];
-
-        let currentImageIndex = 0;
-
-        // Preloader
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('preloader').classList.add('hidden');
-            }, 1500);
+    const particles = [];
+    for(let i=0; i<50; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            speed: Math.random() * 1 + 0.5
         });
+    }
 
-        // Render Gallery
-        function renderGallery() {
-            const grid = document.getElementById('galleryGrid');
-            grid.innerHTML = images.map((img, index) => `
-                <div class="gallery-item" onclick="openLightbox(${index})">
-                    <img src="${img.src}" alt="${img.title}" loading="lazy">
-                    <div class="gallery-overlay">
-                        <h3 class="gallery-title">${img.title}</h3>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Scroll Animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 100) {
-                navbar.style.background = 'rgba(10, 10, 15, 0.95)';
-                navbar.style.boxShadow = '0 10px 40px rgba(0,0,0,0.4)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.05)';
-                navbar.style.boxShadow = '0 5px 20px rgba(0,0,0,0.2)';
-            }
-
-            // Back to top button
-            const backToTop = document.getElementById('backToTop');
-            if (window.scrollY > 300) {
-                backToTop.classList.add('show');
-            } else {
-                backToTop.classList.remove('show');
-            }
+    function animateBg() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#D4AF37';
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            p.y += p.speed;
+            if(p.y > canvas.height) p.y = 0;
         });
+        requestAnimationFrame(animateBg);
+    }
+    animateBg();
 
-        // Light
+    // Images Array
+    const images = [
+        { src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb", title: "Legacy" },
+        { src: "https://images.unsplash.com/photo-1511367461989-f85a21fda167", title: "Moments" },
+        { src: "https://images.unsplash.com/photo-1493246507139-91e8bef99c02", title: "Journey" },
+        { src: "https://images.unsplash.com/photo-1473081556163-2a1713397360", title: "Strength" },
+        { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b", title: "Adventure" },
+        { src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470", title: "Wisdom" }
+    ];
+
+    const gallery = document.getElementById('gallery');
+    images.forEach((img, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.animationDelay = `${index * 0.2}s`;
+        card.innerHTML = `
+            <img src="${img.src}" alt="${img.title}">
+            <div class="info">
+                <h3>${img.title}</h3>
+            </div>
+        `;
+        gallery.appendChild(card);
+    });
+</script>
+
+</body>
+</html>
