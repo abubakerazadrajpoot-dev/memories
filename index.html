@@ -3,156 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dad's Memories | Premium Edition</title>
+    <title>GUL AZAD | Digital Vault</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        
         body { 
-            background: #050505; 
-            color: white; 
-            font-family: 'Segoe UI', sans-serif; 
+            background: #000; 
+            color: #D4AF37; 
+            font-family: 'Rajdhani', sans-serif; 
             overflow-x: hidden;
         }
 
-        /* Animated Background Canvas */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-        }
+        /* Matrix Background Canvas */
+        #canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
-
-        h1 {
-            text-align: center;
-            font-size: 3rem;
-            color: #D4AF37;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 50px;
-            animation: fadeInDown 1.5s ease-out;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 20px;
-            overflow: hidden;
+        /* HEADER GLITCH EFFECT */
+        .header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%); }
+        
+        .main-title { 
+            font-family: 'Orbitron', sans-serif; 
+            font-size: clamp(3rem, 15vw, 8rem); 
+            font-weight: 900; 
+            letter-spacing: 20px;
             position: relative;
-            backdrop-filter: blur(10px);
-            transform: translateY(100px);
-            opacity: 0;
-            animation: slideUp 0.8s forwards;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #D4AF37, 0 0 20px #D4AF37; }
+            to { text-shadow: 0 0 30px #D4AF37, 0 0 50px #FAD02C; }
+        }
+
+        .subtitle { font-size: 1.2rem; letter-spacing: 5px; color: #aaa; margin-top: -10px; text-transform: uppercase; }
+
+        /* SECTIONS CONTAINER */
+        .section-container { padding: 50px 20px; max-width: 1400px; margin: 0 auto; }
+        .section-name { font-size: 2rem; border-left: 5px solid #D4AF37; padding-left: 15px; margin: 60px 0 30px; text-transform: uppercase; letter-spacing: 3px; }
+
+        /* IMAGE SLOTS (EMPTY FOR YOU) */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        
+        .image-slot {
+            height: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
             transition: 0.5s;
+            backdrop-filter: blur(5px);
         }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.03) !important;
-            border-color: #D4AF37;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        .image-slot::before {
+            content: "ADD IMAGE HERE";
+            font-size: 0.8rem;
+            color: rgba(212, 175, 55, 0.2);
         }
 
-        .card img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            transition: 0.5s;
+        .image-slot:hover {
+            border: 1px solid #D4AF37;
+            transform: translateY(-10px) rotateY(10deg);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+            background: rgba(212, 175, 55, 0.05);
         }
 
-        .card:hover img { transform: scale(1.1); }
-
-        .info {
-            padding: 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            position: absolute;
-            bottom: 0; width: 100%;
+        /* LIGHTING EFFECT ON MOUSE */
+        .cursor-light {
+            position: fixed; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: 999;
         }
-
-        .info h3 { color: #D4AF37; font-size: 1.2rem; }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) { h1 { font-size: 1.8rem; } }
     </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<canvas id="canvas"></canvas>
+<div class="cursor-light" id="light"></div>
 
-<div class="container">
-    <h1>Dad's Memories</h1>
-    <div class="gallery-grid" id="gallery">
-        </div>
+<header class="header">
+    <h1 class="main-title">GUL AZAD</h1>
+    <p class="subtitle">Personal Memory Archive // Secured</p>
+</header>
+
+<div class="section-container">
+    
+    <div class="section-name">01. THE LEGACY</div>
+    <div class="grid">
+        <div class="image-slot"></div>
+        <div class="image-slot"></div>
+        <div class="image-slot"></div>
+    </div>
+
+    <div class="section-name">02. UNTOLD MOMENTS</div>
+    <div class="grid">
+        <div class="image-slot"></div>
+        <div class="image-slot"></div>
+        <div class="image-slot"></div>
+    </div>
+
+    <div class="section-name">03. THE JOURNEY</div>
+    <div class="grid">
+        <div class="image-slot"></div>
+        <div class="image-slot"></div>
+        <div class="image-slot"></div>
+    </div>
+
 </div>
 
 <script>
-    // Matrix-like background animation
-    const canvas = document.getElementById('bg-canvas');
+    // Matrix Background Animation
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles = [];
-    for(let i=0; i<50; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2,
-            speed: Math.random() * 1 + 0.5
-        });
-    }
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%';
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = Array.from({ length: columns }).fill(1);
 
-    function animateBg() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#D4AF37';
-        particles.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            p.y += p.speed;
-            if(p.y > canvas.height) p.y = 0;
-        });
-        requestAnimationFrame(animateBg);
+        ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+            rainDrops[i]++;
+        }
     }
-    animateBg();
+    setInterval(draw, 30);
 
-    // Images Array
-    const images = [
-        { src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb", title: "Legacy" },
-        { src: "https://images.unsplash.com/photo-1511367461989-f85a21fda167", title: "Moments" },
-        { src: "https://images.unsplash.com/photo-1493246507139-91e8bef99c02", title: "Journey" },
-        { src: "https://images.unsplash.com/photo-1473081556163-2a1713397360", title: "Strength" },
-        { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b", title: "Adventure" },
-        { src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470", title: "Wisdom" }
-    ];
-
-    const gallery = document.getElementById('gallery');
-    images.forEach((img, index) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.style.animationDelay = `${index * 0.2}s`;
-        card.innerHTML = `
-            <img src="${img.src}" alt="${img.title}">
-            <div class="info">
-                <h3>${img.title}</h3>
-            </div>
-        `;
-        gallery.appendChild(card);
+    // Mouse Light Effect
+    const light = document.getElementById('light');
+    document.addEventListener('mousemove', (e) => {
+        light.style.left = e.clientX - 200 + 'px';
+        light.style.top = e.clientY - 200 + 'px';
     });
 </script>
 
